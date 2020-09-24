@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - master
+      # TODO: Remove this
+      - feat/ci-overhaul
     tags:
       - v*
   pull_request:
