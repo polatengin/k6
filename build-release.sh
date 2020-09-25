@@ -42,7 +42,8 @@ package() {
     deb|rpm)
         # The go-bin-* tools expect the binary in /tmp/
         [ ! -r /tmp/k6 ] && cp "dist/${NAME}/k6" /tmp/k6
-        "go-bin-${FMT}" generate --file "packaging/${FMT}.json" -a amd64 --version $VERSION -o "dist/k6-v${VERSION}-amd64.${FMT}"
+        "go-bin-${FMT}" generate --file "packaging/${FMT}.json" -a amd64 \
+            --version "${VERSION#v}" -o "dist/k6-${VERSION}-amd64.${FMT}"
         ;;
     tgz)
         tar -C "${OUT_DIR}" -zcf "${OUT_DIR}/${NAME}.tar.gz" "$NAME"
@@ -75,6 +76,7 @@ checksum() {
 
 cleanup() {
     find "$OUT_DIR" -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} \;
+    rm -f /tmp/k6
     echo "--- Cleaned ${OUT_DIR}"
 }
 trap cleanup EXIT
