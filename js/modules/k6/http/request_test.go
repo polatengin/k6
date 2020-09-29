@@ -1641,8 +1641,6 @@ func checkErrorCode(t testing.TB, tags *stats.SampleTags, code int, msg string) 
 }
 
 func TestErrorCodes(t *testing.T) {
-	// lookup dafsgdhfjg on 127.0.0.53:53: server misbehaving
-	t.Skip("fails on gh-actions")
 	t.Parallel()
 	tb, state, samples, rt, _ := newRuntime(t)
 	state.Options.Throw = null.BoolFrom(false)
@@ -1671,7 +1669,7 @@ func TestErrorCodes(t *testing.T) {
 			name:              "Unroutable",
 			expectedErrorCode: 1101,
 			expectedErrorMsg:  "lookup: no such host",
-			script:            `var res = http.request("GET", "http://sdafsgdhfjg/");`,
+			script:            `var res = http.request("GET", "http://sdafsgdhfjg.com/");`,
 		},
 
 		{
@@ -1685,7 +1683,7 @@ func TestErrorCodes(t *testing.T) {
 			expectedErrorCode: 1101,
 			expectedErrorMsg:  "lookup: no such host",
 			moreSamples:       1,
-			script:            `var res = http.request("GET", "HTTPBIN_URL/redirect-to?url=http://dafsgdhfjg/");`,
+			script:            `var res = http.request("GET", "HTTPBIN_URL/redirect-to?url=http://dafsgdhfjg.com/");`,
 		},
 		{
 			name:              "Non location redirect",
@@ -1703,7 +1701,7 @@ func TestErrorCodes(t *testing.T) {
 			name:              "Missing protocol",
 			expectedErrorCode: 1000,
 			expectedErrorMsg:  `unsupported protocol scheme ""`,
-			script:            `var res = http.request("GET", "dafsgdhfjg/");`,
+			script:            `var res = http.request("GET", "dafsgdhfjg.com/");`,
 		},
 		{
 			name:        "Too many redirects",
