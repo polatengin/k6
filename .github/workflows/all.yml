@@ -5,8 +5,6 @@ on:
   push:
     branches:
       - master
-      # TODO: Remove this
-      - feat/ci-overhaul
     tags:
       - v*
   pull_request:
@@ -86,7 +84,7 @@ jobs:
                   list=$(echo "$list" | cut -f1 -d ' ' | sort -u | paste -sd, -)
               fi
 
-              go test -v -race -timeout 800s  --coverpkg="$list" -coverprofile=$(echo $pkg | tr / -).coverage $pkg
+              go test -race -timeout 800s --coverpkg="$list" -coverprofile=$(echo $pkg | tr / -).coverage $pkg
           done
           grep -h -v "^mode:" *.coverage >> coverage.txt
           rm -f *.coverage
