@@ -285,3 +285,18 @@ jobs:
       #     $env:VERSION = $env:VERSION.TrimStart("v", " ")
       #     curl --fail -H "X-GPG-PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}" -T .\k6.msi "https://${{ secrets.BINTRAY_USER }}:${{ secrets.BINTRAY_KEY }}@api.bintray.com/content/loadimpact/windows/k6/$env:VERSION/k6-v$env:VERSION-amd64.msi?publish=1&override=1"
       #     curl --fail -H "X-GPG-PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}" -T .\k6.portable.$env:VERSION.nupkg "https://${{ secrets.BINTRAY_USER }}:${{ secrets.BINTRAY_KEY }}@api.bintray.com/content/loadimpact/choco/k6.portable/$env:VERSION/k6.portable.$env:VERSION.nupkg?publish=1&override=1"'
+
+  publish-macos:
+    runs-on: macos-latest
+    needs: [deps, lint, test, configure, build]
+    if: startsWith(github.ref, 'refs/tags/v')
+    env:
+      VERSION: ${{ needs.configure.outputs.version }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@cd7c1eba155dc11d77aa3e3e4013836ad96a6894
+      - name: Create version bump PR
+        run: brew bump-formula-pr k6 --tag="$VERSION" --revision="$GITHUB_SHA"
