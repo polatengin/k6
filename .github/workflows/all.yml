@@ -51,14 +51,14 @@ jobs:
         with:
           fetch-depth: 0
       - name: Lint
-        # Why is `go mod vendor` needed here!? If it's not run then
-        # golangci-lint fails because of inconsistent vendoring...
         run: |
+          pushd .
+          cd $(mktemp -d)
           go get github.com/golangci/golangci-lint/cmd/golangci-lint@$GOLANGCI_VERSION
+          export PATH="$HOME/go/bin:$PATH"
+          popd
           BASEREV=$(git merge-base HEAD origin/master)
           echo "Base revision: $BASEREV"
-          export PATH="$HOME/go/bin:$PATH"
-          go mod vendor
           golangci-lint run --out-format=tab --new-from-rev "$BASEREV" ./...
 
   test:
