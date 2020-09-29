@@ -14,9 +14,6 @@ on:
 env:
   APP_NAME: "k6"
   DOCKER_IMAGE_ID: ${{ github.repository }}
-  # Force pure Go DNS resolver, see https://golang.org/pkg/net/#hdr-Name_Resolution
-  # Needed for some of our tests (TestErrorCodes).
-  GODEBUG: netdns=go+1
 
 jobs:
   deps:
