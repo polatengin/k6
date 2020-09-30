@@ -230,7 +230,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install pandoc
-        uses: crazy-max/ghaction-chocolatey@v1
+        uses: crazy-max/ghaction-chocolatey@b6061d587628735be315d74358228b83a7dba9a7
         with:
           args: install -y pandoc
       - name: Install wix tools
@@ -261,7 +261,7 @@ jobs:
           cd .\packaging
           (Get-Content '.\k6.portable.nuspec' -Raw).Replace("<version>__REPLACE__</version>", "<version>$env:VERSION</version>") | Out-File '.\k6.portable.nuspec'
       - name: Create Chocolatey package
-        uses: crazy-max/ghaction-chocolatey@v1
+        uses: crazy-max/ghaction-chocolatey@b6061d587628735be315d74358228b83a7dba9a7
         with:
           args: pack --verbose --outputdirectory .\packaging .\packaging\k6.portable.nuspec
       # - name: Upload packages to Bintray
