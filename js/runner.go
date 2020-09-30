@@ -400,8 +400,7 @@ type VU struct {
 
 	Samples chan<- stats.SampleContainer
 
-	// Fails golangci-lint with 'structcheck `setupData` is unused' ???
-	setupData goja.Value // nolint: structcheck
+	setupData goja.Value
 
 	state *lib.State
 }

@@ -145,7 +145,7 @@ func TestSetupData(t *testing.T) {
 				lib.RuntimeOptions{},
 			)
 			require.NoError(t, err)
-			err = runner.SetOptions(lib.Options{
+			runner.SetOptions(lib.Options{
 				Paused:          null.BoolFrom(true),
 				VUs:             null.IntFrom(2),
 				Iterations:      null.IntFrom(3),
@@ -153,7 +153,6 @@ func TestSetupData(t *testing.T) {
 				SetupTimeout:    types.NullDurationFrom(5 * time.Second),
 				TeardownTimeout: types.NullDurationFrom(5 * time.Second),
 			})
-			require.NoError(t, err)
 			execScheduler, err := local.NewExecutionScheduler(runner, logger)
 			require.NoError(t, err)
 			engine, err := core.NewEngine(execScheduler, runner.GetOptions(), logger)

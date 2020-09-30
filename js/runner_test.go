@@ -117,14 +117,13 @@ func TestRunnerOptions(t *testing.T) {
 
 	testdata := map[string]*Runner{"Source": r1, "Archive": r2}
 	for name, r := range testdata {
-		r := r
 		t.Run(name, func(t *testing.T) {
 			assert.Equal(t, r.Bundle.Options, r.GetOptions())
 			assert.Equal(t, null.NewBool(false, false), r.Bundle.Options.Paused)
-			require.NoError(t, r.SetOptions(lib.Options{Paused: null.BoolFrom(true)}))
+			r.SetOptions(lib.Options{Paused: null.BoolFrom(true)})
 			assert.Equal(t, r.Bundle.Options, r.GetOptions())
 			assert.Equal(t, null.NewBool(true, true), r.Bundle.Options.Paused)
-			require.NoError(t, r.SetOptions(lib.Options{Paused: null.BoolFrom(false)}))
+			r.SetOptions(lib.Options{Paused: null.BoolFrom(false)})
 			assert.Equal(t, r.Bundle.Options, r.GetOptions())
 			assert.Equal(t, null.NewBool(false, true), r.Bundle.Options.Paused)
 		})
@@ -160,7 +159,7 @@ func TestOptionsSettingToScript(t *testing.T) {
 			require.NoError(t, err)
 
 			newOptions := lib.Options{TeardownTimeout: types.NullDurationFrom(4 * time.Second)}
-			require.NoError(t, r.SetOptions(newOptions))
+			r.SetOptions(newOptions)
 			require.Equal(t, newOptions, r.GetOptions())
 
 			samples := make(chan stats.SampleContainer, 100)
@@ -505,8 +504,7 @@ func TestVURunContext(t *testing.T) {
 		exports.default = function() { fn(); }
 		`)
 	require.NoError(t, err)
-	err = r1.SetOptions(r1.GetOptions().Apply(lib.Options{Throw: null.BoolFrom(true)}))
-	require.NoError(t, err)
+	r1.SetOptions(r1.GetOptions().Apply(lib.Options{Throw: null.BoolFrom(true)}))
 
 	r2, err := NewFromArchive(testutils.NewLogger(t), r1.MakeArchive(), lib.RuntimeOptions{})
 	if !assert.NoError(t, err) {
@@ -908,13 +906,12 @@ func TestVUIntegrationHosts(t *testing.T) {
 		return
 	}
 
-	err = r1.SetOptions(lib.Options{
+	r1.SetOptions(lib.Options{
 		Throw: null.BoolFrom(true),
 		Hosts: map[string]*lib.HostAddress{
 			"test.loadimpact.com": {IP: net.ParseIP("127.0.0.1")},
 		},
 	})
-	require.NoError(t, err)
 
 	r2, err := NewFromArchive(testutils.NewLogger(t), r1.MakeArchive(), lib.RuntimeOptions{})
 	if !assert.NoError(t, err) {
@@ -1078,12 +1075,11 @@ func TestVUIntegrationCookiesReset(t *testing.T) {
 	if !assert.NoError(t, err) {
 		return
 	}
-	err = r1.SetOptions(lib.Options{
+	r1.SetOptions(lib.Options{
 		Throw:        null.BoolFrom(true),
 		MaxRedirects: null.IntFrom(10),
 		Hosts:        tb.Dialer.Hosts,
 	})
-	require.NoError(t, err)
 
 	r2, err := NewFromArchive(testutils.NewLogger(t), r1.MakeArchive(), lib.RuntimeOptions{})
 	if !assert.NoError(t, err) {
@@ -1137,13 +1133,12 @@ func TestVUIntegrationCookiesNoReset(t *testing.T) {
 	if !assert.NoError(t, err) {
 		return
 	}
-	err = r1.SetOptions(lib.Options{
+	r1.SetOptions(lib.Options{
 		Throw:          null.BoolFrom(true),
 		MaxRedirects:   null.IntFrom(10),
 		Hosts:          tb.Dialer.Hosts,
 		NoCookiesReset: null.BoolFrom(true),
 	})
-	require.NoError(t, err)
 
 	r2, err := NewFromArchive(testutils.NewLogger(t), r1.MakeArchive(), lib.RuntimeOptions{})
 	if !assert.NoError(t, err) {
@@ -1180,8 +1175,7 @@ func TestVUIntegrationVUID(t *testing.T) {
 	if !assert.NoError(t, err) {
 		return
 	}
-	err = r1.SetOptions(lib.Options{Throw: null.BoolFrom(true)})
-	require.NoError(t, err)
+	r1.SetOptions(lib.Options{Throw: null.BoolFrom(true)})
 
 	r2, err := NewFromArchive(testutils.NewLogger(t), r1.MakeArchive(), lib.RuntimeOptions{})
 	if !assert.NoError(t, err) {
