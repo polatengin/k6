@@ -105,8 +105,10 @@ jobs:
           done
           grep -h -v "^mode:" *.coverage >> coverage.txt
           rm -f *.coverage
-          bash <(curl --fail -s https://codecov.io/bash)
-          go tool cover -html=coverage.txt -o coverage.html
+      - name: Upload coverage to Codecov
+        run: bash <(curl --fail -s https://codecov.io/bash)
+      - name: Generate coverage HTML report
+        run: go tool cover -html=coverage.txt -o coverage.html
       - name: Upload coverage report
         uses: actions/upload-artifact@v2
         with:
