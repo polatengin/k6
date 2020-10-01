@@ -78,12 +78,14 @@ jobs:
           set -x
           go version
           export GOMAXPROCS=2
-          args=()
-          # Run without -race on Windows to minimize flakiness
-          if [[ "${{ matrix.platform }}" != windows* ]]; then
-            args+=("-race")
+          args=("-p" "2" "-race")
+          # Run with less concurrency on Windows to minimize flakiness.
+          if [[ "${{ matrix.platform }}" == windows* ]]; then
+            args[1]="1"
+            unset args[2]
+            export GOMAXPROCS=1
           fi
-          go test -p 2 "${args[@]}" -timeout 800s ./...
+          go test "${args[@]}" -timeout 800s ./...
 
   test-coverage:
     runs-on: ubuntu-latest
