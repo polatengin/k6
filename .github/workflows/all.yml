@@ -75,9 +75,15 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - name: Run tests
         run: |
+          set -x
           go version
           export GOMAXPROCS=2
-          go test -p 2 -race -timeout 800s ./...
+          args=()
+          # Run without -race on Windows to minimize flakiness
+          if [[ "${{ matrix.platform }}" != windows* ]]; then
+            args+=("-race")
+          fi
+          go test -p 2 "${args[@]}" -timeout 800s ./...
 
   test-coverage:
     runs-on: ubuntu-latest
