@@ -74,11 +74,10 @@ jobs:
           set -x
           go version
           export GOMAXPROCS=2
-          args=("-p" "2" "-race")
+          args=("-race")
           # Run with less concurrency on Windows to minimize flakiness.
           if [[ "${{ matrix.platform }}" == windows* ]]; then
-            args[1]="1"
-            unset args[2]
+            unset args[0]
             export GOMAXPROCS=1
           fi
           go test "${args[@]}" -timeout 800s ./...
@@ -102,6 +101,12 @@ jobs:
         run: |
           go version
           export GOMAXPROCS=2
+          args=("-race")
+          # Run with less concurrency on Windows to minimize flakiness.
+          if [[ "${{ matrix.platform }}" == windows* ]]; then
+            unset args[0]
+            export GOMAXPROCS=1
+          fi
           echo "mode: set" > coverage.txt
           for pkg in $(go list ./... | grep -v vendor); do
               list=$(go list -test -f  '{{ join .Deps  "\n"}}' $pkg | grep github.com/loadimpact/k6 | grep -v vendor || true)
@@ -109,7 +114,7 @@ jobs:
                   list=$(echo "$list" | cut -f1 -d ' ' | sort -u | paste -sd, -)
               fi
 
-              go test -race -timeout 800s --coverpkg="$list" -coverprofile=$(echo $pkg | tr / -).coverage $pkg
+              go test "${args[@]}" -timeout 800s --coverpkg="$list" -coverprofile=$(echo $pkg | tr / -).coverage $pkg
           done
           grep -h -v "^mode:" *.coverage >> coverage.txt
           rm -f *.coverage
