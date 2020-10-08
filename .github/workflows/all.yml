@@ -160,14 +160,14 @@ jobs:
         env:
           GO111MODULE: 'off'
         run: |
-          gopath="$(go env GOPATH)"
+          export GOPATH="$(go env GOPATH)"
           go get github.com/Masterminds/glide
           go get -d github.com/mh-cbon/go-bin-deb \
-              && (cd "$gopath/src/github.com/mh-cbon/go-bin-deb" \
+              && (cd "$GOPATH/src/github.com/mh-cbon/go-bin-deb" \
               && glide install \
               && go install)
           go get -d github.com/mh-cbon/go-bin-rpm \
-              && (cd "$gopath/src/github.com/mh-cbon/go-bin-rpm" \
+              && (cd "$GOPATH/src/github.com/mh-cbon/go-bin-rpm" \
               && glide install \
               && go install)
           sudo apt-get update -y
