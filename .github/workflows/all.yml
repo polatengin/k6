@@ -1,4 +1,4 @@
-name: Deps, Lint, Test, Build, Publish
+name: CI
 on:
   # Enable manually triggering this workflow via the API or web UI
   workflow_dispatch:
