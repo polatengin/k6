@@ -74,10 +74,11 @@ jobs:
           set -x
           go version
           export GOMAXPROCS=2
-          args=("-race")
+          args=("-p" "2" "-race")
           # Run with less concurrency on Windows to minimize flakiness.
           if [[ "${{ matrix.platform }}" == windows* ]]; then
-            unset args[0]
+            unset args[2]
+            args[1]="1"
             export GOMAXPROCS=1
           fi
           go test "${args[@]}" -timeout 800s ./...
@@ -101,10 +102,11 @@ jobs:
         run: |
           go version
           export GOMAXPROCS=2
-          args=("-race")
+          args=("-p" "2" "-race")
           # Run with less concurrency on Windows to minimize flakiness.
           if [[ "${{ matrix.platform }}" == windows* ]]; then
-            unset args[0]
+            unset args[2]
+            args[1]="1"
             export GOMAXPROCS=1
           fi
           echo "mode: set" > coverage.txt
