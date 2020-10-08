@@ -71,7 +71,7 @@ checksum() {
 
     echo "--- Generating checksum file..."
     rm -f "${OUT_DIR}/$CHECKSUM_FILE"
-    (cd "$OUT_DIR" && find * -maxdepth 0 -type f | xargs "${CHECKSUM_CMD[@]}" > "$CHECKSUM_FILE")
+    (cd "$OUT_DIR" && find . -maxdepth 1 -type f -printf '%P\n' | sort | xargs "${CHECKSUM_CMD[@]}" > "$CHECKSUM_FILE")
 }
 
 cleanup() {
